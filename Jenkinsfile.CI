@@ -15,6 +15,7 @@ pipeline {
             steps{
                 dir('To-Do-App'){
                     sh 'docker exec app-container yarn test'
+                    sh 'docker compose down'
                 }
             }
         }
