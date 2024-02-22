@@ -1,1 +1,22 @@
+pipeline {
+    agent { label 'slavenode' }
 
+    stages {
+        stage('build'){
+            steps{
+                dir('To-Do-App'){
+                    sh 'ls -l'
+                    sh 'docker compose up --build -d'
+                    echo 'hola'
+                }
+            }
+        }
+        stage('Test'){
+            steps{
+                dir('To-Do-App'){
+                    sh 'docker exec app-container yarn test'
+                }
+            }
+        }
+    }
+}
