@@ -12,7 +12,7 @@ pipeline {
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-josanchezva-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                             sh '''
                                 docker compose up --build -d
-                                docker tag deploypipeline-app $DOCKERHUB_USER/deploypipeline-app:"${TAG}"
+                                docker tag deploypipeline-app $DOCKERHUB_USER/to-do-app-app:"${TAG}"
                                 docker push $DOCKERHUB_USER/to-do-app-app:"${TAG}"
                             '''
                         }
