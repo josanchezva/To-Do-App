@@ -7,7 +7,7 @@ pipeline {
                     script {
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-josanchezva-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                             sh '''
-                                docker compose up --build -d
+                                docker compose start 
                             '''
                         }
                     }
