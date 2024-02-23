@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'developmentNode' }
+    agent { label 'developNode' }
     //agent any
 
     environment {
@@ -11,7 +11,7 @@ pipeline {
             steps{
                 dir('To-Do-App'){
                     sh 'ls -l'
-                    sh 'docker compose -f compose-development.yml build '
+                    sh 'docker compose -f compose-development.yml build'
                 }
             }
         }
@@ -45,7 +45,7 @@ pipeline {
         }
         stage('triggerCDpipeline') {
             steps {
-                build job: "deployPipeline", wait: true
+                build job: "deploy-registry", wait: true
             }
         }
     }
