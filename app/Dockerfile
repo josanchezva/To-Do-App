@@ -1,8 +1,6 @@
-FROM node:12-alpine
+FROM josanchezva/to-do-app-app:latest
 RUN apk add --no-cache python2 g++ make
 WORKDIR /app
-COPY . .
-RUN yarn install
 CMD ["node", "src/index.js"]
 EXPOSE 3000
 
