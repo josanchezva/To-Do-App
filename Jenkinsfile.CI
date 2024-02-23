@@ -18,7 +18,6 @@ pipeline {
             steps{
                 dir('To-Do-App'){
                     sh 'docker exec $(docker ps -aqf "name=app-container") yarn test'
-                    sh 'docker compose down'
                 }
             }
         }
@@ -28,11 +27,11 @@ pipeline {
                     script {
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-josanchezva-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                             sh '''
-                                docker compose up --build -d
                                 docker tag deploypipeline-app $DOCKERHUB_USER/to-do-app-app:$TAG
                                 docker tag deploypipeline-app $DOCKERHUB_USER/to-do-app-app:latest
                                 docker push $DOCKERHUB_USER/to-do-app-app:$TAG
                                 docker push $DOCKERHUB_USER/to-do-app-app:latest
+                                docker compose down
                             '''
                         }
                     }
