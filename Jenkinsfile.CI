@@ -9,14 +9,15 @@ pipeline {
         stage('build'){
             steps{
                 dir('To-Do-App'){
-                    sh 'docker compose up --build -d'
+                    sh 'ls -l'
+                    sh 'yarn install'
                 }
             }
         }
         stage('Test'){
             steps{
                 dir('To-Do-App'){
-                    sh 'docker exec app-container yarn test'
+                    sh 'yarn test'
                     sh 'docker compose down'
                 }
             }
@@ -29,7 +30,9 @@ pipeline {
                             sh '''
                                 docker compose up --build -d
                                 docker tag deploypipeline-app $DOCKERHUB_USER/to-do-app-app:$TAG
+                                docker tag deploypipeline-app $DOCKERHUB_USER/to-do-app-app:latest
                                 docker push $DOCKERHUB_USER/to-do-app-app:$TAG
+                                docker push $DOCKERHUB_USER/to-do-app-app:latest
                             '''
                         }
                     }
