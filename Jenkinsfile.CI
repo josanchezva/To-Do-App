@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'slavenode' }
+    agent { label 'developmentNode' }
 
     environment {
         TAG = "${env.BUILD_ID}"
