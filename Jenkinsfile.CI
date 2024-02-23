@@ -31,7 +31,6 @@ pipeline {
                                 docker tag deploypipeline-app $DOCKERHUB_USER/to-do-app-app:latest
                                 docker push $DOCKERHUB_USER/to-do-app-app:$TAG
                                 docker push $DOCKERHUB_USER/to-do-app-app:latest
-                                docker compose down
                             '''
                         }
                     }
