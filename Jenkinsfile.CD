@@ -17,6 +17,7 @@ pipeline {
                                 docker compose down
                                 git checkout release
                                 git merge origin/main
+                                git push origin release
                             '''
                         }
                     }
