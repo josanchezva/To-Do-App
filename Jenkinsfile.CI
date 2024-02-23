@@ -17,7 +17,7 @@ pipeline {
         stage('Test'){
             steps{
                 dir('To-Do-App'){
-                    sh 'docker run buildtestdevenvironment-app --rm yarn test '
+                    sh 'docker run  --rm buildtestdevenvironment-app  yarn test '
                 }
             }
         }
