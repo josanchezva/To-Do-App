@@ -18,7 +18,7 @@ pipeline {
                                 git checkout release
                                 git merge origin/main
                                 git add .
-                                git push 'u origin
+                                git push -u origin
                             '''
                         }
                     }
