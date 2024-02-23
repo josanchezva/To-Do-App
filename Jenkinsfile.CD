@@ -1,22 +1,13 @@
 pipeline {
     agent { label 'slavenode' }
-    environment {
-        TAG = "${env.BUILD_ID}"
-    }
     stages {
-        stage('Build and Push') {
+        stage('Deploy') {
             steps {
-                echo "${TAG}"
                 dir('To-Do-App') {
                     script {
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-josanchezva-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                             sh '''
                                 docker compose up --build -d
-                                docker tag deploypipeline-app $DOCKERHUB_USER/to-do-app-app:"${TAG}"
-                                docker push $DOCKERHUB_USER/to-do-app-app:"${TAG}"
-                                docker compose down
-                                git checkout release
-                                git merge origin/main
                             '''
                         }
                     }
