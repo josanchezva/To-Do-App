@@ -27,8 +27,8 @@ pipeline {
                     script {
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-josanchezva-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                             sh '''
-                                docker tag deploypipeline-app $DOCKERHUB_USER/to-do-app-app:$TAG
-                                docker tag deploypipeline-app $DOCKERHUB_USER/to-do-app-app:latest
+                                docker tag buildTestDevEnvironment-app $DOCKERHUB_USER/to-do-app-app:$TAG
+                                docker tag buildTestDevEnvironment-app $DOCKERHUB_USER/to-do-app-app:latest
                                 docker push $DOCKERHUB_USER/to-do-app-app:$TAG
                                 docker push $DOCKERHUB_USER/to-do-app-app:latest
                             '''
