@@ -15,7 +15,7 @@ pipeline {
                                 docker tag deploypipeline-app $DOCKERHUB_USER/to-do-app-app:"${TAG}"
                                 docker push $DOCKERHUB_USER/to-do-app-app:"${TAG}"
                                 docker compose down
-                                git checkout -b release
+                                git checkout release
                                 git merge main
                                 git push -u origin main
                             '''
