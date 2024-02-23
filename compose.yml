@@ -1,11 +1,13 @@
 services:
   app:
+    container_name: app-container
     build:
       context: ./app
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
   nginx:
+    container_name: nginx-container
     build: ./nginx
     ports:
       - "80:80"
