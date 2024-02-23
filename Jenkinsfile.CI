@@ -1,5 +1,6 @@
 pipeline {
-    agent { label 'slavenode' }
+    agent { label 'developmentNode' }
+    //agent any
 
     environment {
         TAG = "${env.BUILD_ID}"
@@ -10,14 +11,14 @@ pipeline {
             steps{
                 dir('To-Do-App'){
                     sh 'ls -l'
-                    sh 'docker compose build '
+                    sh 'docker compose -f compose-development.yml build '
                 }
             }
         }
         stage('Test'){
             steps{
                 dir('To-Do-App'){
-                    sh 'docker run  --rm buildtestdevenvironment-app  yarn test '
+                    sh 'docker run --rm buildtestdevenvironment-app yarn test '
                 }
             }
         }
@@ -27,10 +28,15 @@ pipeline {
                     script {
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-josanchezva-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                             sh '''
-                                docker tag buildtestdevenvironment-app $DOCKERHUB_USER/to-do-app-app:$TAG
-                                docker tag buildtestdevenvironment-app $DOCKERHUB_USER/to-do-app-app:latest
-                                docker push $DOCKERHUB_USER/to-do-app-app:$TAG
-                                docker push $DOCKERHUB_USER/to-do-app-app:latest
+                                docker tag buildtestdevenvironment-app $DOCKERHUB_USER/to-do-app:$TAG
+                                docker tag buildtestdevenvironment-app $DOCKERHUB_USER/to-do-app:latest
+                                docker push $DOCKERHUB_USER/to-do-app:$TAG
+                                docker push $DOCKERHUB_USER/to-do-app:latest
+
+                                docker tag buildtestdevenvironment-app $DOCKERHUB_USER/nginx-to-do-app:$TAG
+                                docker tag buildtestdevenvironment-app $DOCKERHUB_USER/nginx-to-do-app:latest
+                                docker push $DOCKERHUB_USER/nginx-to-do-app:$TAG
+                                docker push $DOCKERHUB_USER/nginx-to-do-app:latest
                             '''
                         }
                     }

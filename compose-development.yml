@@ -1,0 +1,19 @@
+services:
+  app:
+    container_name: app-container
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+      target: development
+    ports:
+      - "3000:3000"
+  nginx:
+    container_name: nginx-container
+    build: 
+      context: ./nginx
+      dockerfile: Dockerfile
+      target: development
+    ports:
+      - "80:80"
+    depends_on:
+      - app

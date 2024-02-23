@@ -1,13 +1,15 @@
 pipeline {
-    agent { label 'slavenode' }
+    agent { label 'deploymentNode' }
+    //agent any
     stages {
         stage('Deploy') {
             steps {
                 dir('To-Do-App') {
+                    sh
                     script {
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-josanchezva-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-                            sh '''
-                                docker compose up --no-build -d
+                            sh ''' 
+                                docker compose -f compose-release.yml up 
                             '''
                         }
                     }

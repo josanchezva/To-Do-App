@@ -4,11 +4,15 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile
+      target: release
     ports:
       - "3000:3000"
   nginx:
     container_name: nginx-container
-    build: ./nginx
+    build: 
+      context: ./nginx
+      dockerfile: Dockerfile
+      target: release
     ports:
       - "80:80"
     depends_on:
