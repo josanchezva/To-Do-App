@@ -1,21 +1,39 @@
 pipeline {
     agent { label 'slavenode' }
 
+    environment {
+        TAG = "${env.BUILD_ID}"
+    }
+
     stages {
         stage('build'){
             steps{
                 dir('To-Do-App'){
                     sh 'ls -l'
-                    sh 'docker compose up --build -d'
-                    echo 'hola'
+                    sh 'yarn install'
                 }
             }
         }
         stage('Test'){
             steps{
                 dir('To-Do-App'){
-                    sh 'docker exec app-container yarn test'
+                    sh 'yarn test'
                     sh 'docker compose down'
+                }
+            }
+        }
+        stage('Release') {
+            steps {
+                dir('To-Do-App') {
+                    script {
+                        withCredentials([usernamePassword(credentialsId: 'dockerhub-josanchezva-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+                            sh '''
+                                docker compose up --build -d
+                                docker tag deploypipeline-app $DOCKERHUB_USER/to-do-app-app:$TAG
+                                docker push $DOCKERHUB_USER/to-do-app-app:$TAG
+                            '''
+                        }
+                    }
                 }
             }
         }
