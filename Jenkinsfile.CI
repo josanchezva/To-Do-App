@@ -10,14 +10,14 @@ pipeline {
             steps{
                 dir('To-Do-App'){
                     sh 'ls -l'
-                    sh 'docker compose up --build -d'
+                    sh 'docker compose build '
                 }
             }
         }
         stage('Test'){
             steps{
                 dir('To-Do-App'){
-                    sh 'docker exec $(docker ps -aqf "name=app-container") yarn test'
+                    sh 'docker run buildtestdevenvironment-app yarn test --rm'
                 }
             }
         }
@@ -27,8 +27,8 @@ pipeline {
                     script {
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-josanchezva-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                             sh '''
-                                docker tag buildTestDevEnvironment-app $DOCKERHUB_USER/to-do-app-app:$TAG
-                                docker tag buildTestDevEnvironment-app $DOCKERHUB_USER/to-do-app-app:latest
+                                docker tag deploypipeline-app $DOCKERHUB_USER/to-do-app-app:$TAG
+                                docker tag deploypipeline-app $DOCKERHUB_USER/to-do-app-app:latest
                                 docker push $DOCKERHUB_USER/to-do-app-app:$TAG
                                 docker push $DOCKERHUB_USER/to-do-app-app:latest
                             '''
