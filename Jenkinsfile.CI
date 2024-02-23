@@ -9,15 +9,14 @@ pipeline {
         stage('build'){
             steps{
                 dir('To-Do-App'){
-                    sh 'ls -l'
-                    sh 'yarn install'
+                    sh 'docker compose up --build -d'
                 }
             }
         }
         stage('Test'){
             steps{
                 dir('To-Do-App'){
-                    sh 'yarn test'
+                    sh 'docker exec app-container yarn test'
                     sh 'docker compose down'
                 }
             }
