@@ -15,7 +15,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                    sh 'docker run --rm buildtestdevenvironment-app yarn test '
+                    sh 'docker run --rm build-test-dev-environment-app yarn test '
             }
         }
         stage('Release') {
@@ -23,13 +23,13 @@ pipeline {
                     script {
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-josanchezva-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                             sh '''
-                                docker tag buildtestdevenvironment-app $DOCKERHUB_USER/to-do-app:$TAG
-                                docker tag buildtestdevenvironment-app $DOCKERHUB_USER/to-do-app:latest
+                                docker tag build-test-dev-environment-app $DOCKERHUB_USER/to-do-app:$TAG
+                                docker tag build-test-dev-environment-app $DOCKERHUB_USER/to-do-app:latest
                                 docker push $DOCKERHUB_USER/to-do-app:$TAG
                                 docker push $DOCKERHUB_USER/to-do-app:latest
 
-                                docker tag buildtestdevenvironment-app $DOCKERHUB_USER/nginx-to-do-app:$TAG
-                                docker tag buildtestdevenvironment-app $DOCKERHUB_USER/nginx-to-do-app:latest
+                                docker tag build-test-dev-environment-app $DOCKERHUB_USER/nginx-to-do-app:$TAG
+                                docker tag build-test-dev-environment-app $DOCKERHUB_USER/nginx-to-do-app:latest
                                 docker push $DOCKERHUB_USER/nginx-to-do-app:$TAG
                                 docker push $DOCKERHUB_USER/nginx-to-do-app:latest
                             '''
