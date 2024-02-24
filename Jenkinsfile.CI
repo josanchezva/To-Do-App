@@ -19,13 +19,22 @@ pipeline {
         }
         stage('Release') {
             steps {
-                script {
-                    docker.withRegistry('https://hub.docker.com/repository/docker/josanchezva/to-do-app', 'dockerhub-josanchezva-credentials') {
-                    def customImage = docker.build("build-test-dev-environment-app:${env.BUILD_ID}")
+                    script {
+                        withCredentials([usernamePassword(credentialsId: 'dockerhub-josanchezva-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+                            sh '''
+                                echo "$DOCKERHUB_PASS" | docker login -u $DOCKERHUB_USER --password-stdin
+                                docker tag build-test-dev-environment-app $DOCKERHUB_USER/to-do-app:$TAG
+                                docker tag build-test-dev-environment-app $DOCKERHUB_USER/to-do-app:latest
+                                docker push $DOCKERHUB_USER/to-do-app:$TAG
+                                docker push $DOCKERHUB_USER/to-do-app:latest
 
-                    customImage.push()
+                                docker tag build-test-dev-environment-app $DOCKERHUB_USER/nginx-to-do-app:$TAG
+                                docker tag build-test-dev-environment-app $DOCKERHUB_USER/nginx-to-do-app:latest
+                                docker push $DOCKERHUB_USER/nginx-to-do-app:$TAG
+                                docker push $DOCKERHUB_USER/nginx-to-do-app:latest
+                            '''
+                        }
                     }
-                }
             }
         }
         stage('triggerCDpipeline') {
