@@ -6,7 +6,9 @@ pipeline {
             steps {
                 sh '''
                     NETWORK_NAME="to-do-app-network"; docker network inspect $NETWORK_NAME >/dev/null 2>&1 || docker network create $NETWORK_NAME
-                    docker stop $(docker ps -a -q)
+                    if [ "$(docker ps -q)" != "" ]; then
+                        docker stop $(docker ps -q) && docker rm $(docker ps -a -q)
+                    fi   
                     docker pull josanchezva/to-do-app:latest
                     docker pull josanchezva/nginx-to-do-app:latest
                     docker run -d -p 3000:3000 --name app-container --network to-do-app-network josanchezva/to-do-app:latest
