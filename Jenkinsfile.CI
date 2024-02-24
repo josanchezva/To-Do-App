@@ -9,6 +9,7 @@ pipeline {
     stages {
         stage('build'){
             steps{
+                sh 'ls -l'
                 dir('To-Do-App'){
                     sh 'ls -l'
                     sh 'docker compose -f compose-development.yml build'
