@@ -29,8 +29,8 @@ pipeline {
                                 docker push $DOCKERHUB_USER/to-do-app:$TAG
                                 docker push $DOCKERHUB_USER/to-do-app:latest
 
-                                docker tag build-test-dev-environment-app $DOCKERHUB_USER/nginx-to-do-app:$TAG
-                                docker tag build-test-dev-environment-app $DOCKERHUB_USER/nginx-to-do-app:latest
+                                docker tag build-test-dev-environment-nginx $DOCKERHUB_USER/nginx-to-do-app:$TAG
+                                docker tag build-test-dev-environment-nginx $DOCKERHUB_USER/nginx-to-do-app:latest
                                 docker push $DOCKERHUB_USER/nginx-to-do-app:$TAG
                                 docker push $DOCKERHUB_USER/nginx-to-do-app:latest
                             '''
