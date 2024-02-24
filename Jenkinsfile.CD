@@ -4,16 +4,14 @@ pipeline {
     stages {
         stage('Deploy') {
             steps {
-                dir('To-Do-App') {
                     sh
                     script {
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-josanchezva-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-                            sh ''' 
-                                docker compose -f compose-release.yml up 
+                            sh '''
+                                docker compose -f compose-release.yml up
                             '''
                         }
                     }
-                }
             }
         }
     }

@@ -7,25 +7,19 @@ pipeline {
     }
 
     stages {
-        stage('build'){
-            steps{
-                sh 'ls -l'
-                dir('To-Do-App'){
+        stage('build') {
+            steps {
                     sh 'ls -l'
                     sh 'docker compose -f compose-development.yml build'
-                }
             }
         }
-        stage('Test'){
-            steps{
-                dir('To-Do-App'){
+        stage('Test') {
+            steps {
                     sh 'docker run --rm buildtestdevenvironment-app yarn test '
-                }
             }
         }
         stage('Release') {
             steps {
-                dir('To-Do-App') {
                     script {
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-josanchezva-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                             sh '''
@@ -41,12 +35,11 @@ pipeline {
                             '''
                         }
                     }
-                }
             }
         }
         stage('triggerCDpipeline') {
             steps {
-                build job: "deploy-registry", wait: true
+                build job: 'deploy-registry', wait: true
             }
         }
     }
