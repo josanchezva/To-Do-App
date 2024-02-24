@@ -1,4 +1,3 @@
-/* groovylint-disable LineLength */
 pipeline {
     agent { label 'deploymentNode' }
     //agent any
@@ -10,8 +9,8 @@ pipeline {
                     docker stop $(docker ps -a -q)
                     docker pull josanchezva/to-do-app:latest
                     docker pull josanchezva/nginx-to-do-app:latest
-                    docker run -d -p 3000:3000 --name to-do_app --network to-do-app-network josanchezva/to-do-app:latest
-                    docker run -d -p 80:80 --name nginx_app_container --network to-do-app-network josanchezva/nginx-to-do-app:latest
+                    docker run -d -p 3000:3000 --name app-container --network to-do-app-network josanchezva/to-do-app:latest
+                    docker run -d -p 80:80 --name nginx-container --network to-do-app-network josanchezva/nginx-to-do-app:latest
                 '''
             }
         }
