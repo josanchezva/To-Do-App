@@ -7,8 +7,8 @@ pipeline {
                 sh '''
                     docker pull josanchezva/to-do-app:latest
                     docker pull josanchezva/nginx-to-do-app:latest
-                    docker run -p 3000:3000 josanchezva/to-do-app:latest -d
-                    docker run -p 80:80 josanchezva/nginx-to-do-app:latest -d
+                    docker run -d -p 3000:3000 josanchezva/to-do-app:latest 
+                    docker run -d -p 80:80 josanchezva/nginx-to-do-app:latest 
                 '''
             }
         }
