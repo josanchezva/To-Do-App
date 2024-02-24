@@ -9,7 +9,6 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                    sh 'ls -l'
                     sh 'docker compose -f compose-development.yml build'
             }
         }
@@ -20,21 +19,11 @@ pipeline {
         }
         stage('Release') {
             steps {
-                    script {
-                        withCredentials([usernamePassword(credentialsId: 'dockerhub-josanchezva-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-                            sh '''
-                                docker tag build-test-dev-environment-app $DOCKERHUB_USER/to-do-app:$TAG
-                                docker tag build-test-dev-environment-app $DOCKERHUB_USER/to-do-app:latest
-                                docker push $DOCKERHUB_USER/to-do-app:$TAG
-                                docker push $DOCKERHUB_USER/to-do-app:latest
+                    docker.withRegistry('https://hub.docker.com/repository/docker/josanchezva/to-do-app', 'dockerhub-josanchezva-credentials') {
+                    def customImage = docker.build("build-test-dev-environment-app:${env.BUILD_ID}")
 
-                                docker tag build-test-dev-environment-app $DOCKERHUB_USER/nginx-to-do-app:$TAG
-                                docker tag build-test-dev-environment-app $DOCKERHUB_USER/nginx-to-do-app:latest
-                                docker push $DOCKERHUB_USER/nginx-to-do-app:$TAG
-                                docker push $DOCKERHUB_USER/nginx-to-do-app:latest
-                            '''
-                        }
-                    }
+                    customImage.push()
+                }
             }
         }
         stage('triggerCDpipeline') {
