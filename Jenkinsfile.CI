@@ -19,6 +19,7 @@ pipeline {
         }
         stage('Release') {
             steps {
+                    sh 'docker compose -f compose-release.yml build'
                     script {
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-josanchezva-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                             sh '''
