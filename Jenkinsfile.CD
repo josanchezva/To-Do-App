@@ -18,13 +18,13 @@ pipeline {
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-josanchezva-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                             sh '''
                                 echo "$DOCKERHUB_PASS" | docker login -u $DOCKERHUB_USER --password-stdin
-                                docker tag deploy-pipeline-app-prod $DOCKERHUB_USER/to-do-app:$TAG-prod
-                                docker tag deploy-pipeline-app-prod $DOCKERHUB_USER/to-do-app:latest-prod
+                                docker tag deploy-in-production-app-prod $DOCKERHUB_USER/to-do-app:$TAG-prod
+                                docker tag deploy-in-production-app-prod $DOCKERHUB_USER/to-do-app:latest-prod
                                 docker push $DOCKERHUB_USER/to-do-app:$TAG-prod
                                 docker push $DOCKERHUB_USER/to-do-app:latest-prod
 
-                                docker tag deploy-pipeline-nginx-prod $DOCKERHUB_USER/nginx-to-do-app:$TAG-prod
-                                docker tag deploy-pipeline-nginx-prod $DOCKERHUB_USER/nginx-to-do-app:latest-prod
+                                docker tag deploy-in-production-nginx-prod $DOCKERHUB_USER/nginx-to-do-app:$TAG-prod
+                                docker tag deploy-in-production-nginx-prod $DOCKERHUB_USER/nginx-to-do-app:latest-prod
                                 docker push $DOCKERHUB_USER/nginx-to-do-app:$TAG-prod
                                 docker push $DOCKERHUB_USER/nginx-to-do-app:latest-prod
                             '''
@@ -34,7 +34,6 @@ pipeline {
         }
         stage('Deploy-to-Prod-Environment') {
             steps {
-                sh 'docker compose -f compose-production.yml down'
                 sh 'docker compose -f compose-production.yml up -d'
             }
         }
