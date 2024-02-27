@@ -39,6 +39,7 @@ pipeline {
         }
         stage('Deploy-to-Dev-Environment') {
             steps {
+                sh 'docker compose -f compose-development.yml down'
                 sh 'docker compose -f compose-development.yml up -d'
             }
         }

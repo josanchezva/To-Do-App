@@ -33,6 +33,7 @@ pipeline {
         }
         stage('Deploy-to-Prod-Environment') {
             steps {
+                sh 'docker compose -f compose-production.yml down'
                 sh 'docker compose -f compose-production.yml up -d'
             }
         }
