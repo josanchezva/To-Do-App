@@ -9,7 +9,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                    sh 'docker compose -f compose-development.yml build'
+                sh 'docker compose -f compose-development.yml down'
+                sh 'docker compose -f compose-development.yml build'
             }
         }
         stage('Test') {
@@ -39,7 +40,6 @@ pipeline {
         }
         stage('Deploy-to-Dev-Environment') {
             steps {
-                sh 'docker compose -f compose-development.yml down'
                 sh 'docker compose -f compose-development.yml up -d'
             }
         }

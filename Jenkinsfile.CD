@@ -8,6 +8,7 @@ pipeline {
     stages {
         stage('Deploy-to-Production-Environment') {
             steps {
+                sh 'docker compose -f compose-production.yml down'
                 sh 'docker compose -f compose-production.yml build -d'
             }
         }
