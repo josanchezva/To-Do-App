@@ -7,40 +7,40 @@ pipeline {
     }
 
     stages {
-        stage('build') {
+        stage('Build') {
             steps {
                     sh 'docker compose -f compose-development.yml build'
             }
         }
         stage('Test') {
             steps {
-                    sh 'docker run --rm build-test-dev-environment-app yarn test '
+                    sh 'docker run --rm build-test-dev-environment-app yarn test'
             }
         }
-        stage('Release') {
+        stage('Push-to-DockerHub') {
             steps {
                     sh 'docker compose -f compose-release.yml build'
                     script {
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-josanchezva-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                             sh '''
                                 echo "$DOCKERHUB_PASS" | docker login -u $DOCKERHUB_USER --password-stdin
-                                docker tag build-test-dev-environment-app $DOCKERHUB_USER/to-do-app:$TAG
-                                docker tag build-test-dev-environment-app $DOCKERHUB_USER/to-do-app:latest
+                                docker tag build-test-dev-environment-app-dev $DOCKERHUB_USER/to-do-app:$TAG-dev
+                                docker tag build-test-dev-environment-app-dev $DOCKERHUB_USER/to-do-app:latest-dev
                                 docker push $DOCKERHUB_USER/to-do-app:$TAG
                                 docker push $DOCKERHUB_USER/to-do-app:latest
-
-                                docker tag build-test-dev-environment-nginx $DOCKERHUB_USER/nginx-to-do-app:$TAG
-                                docker tag build-test-dev-environment-nginx $DOCKERHUB_USER/nginx-to-do-app:latest
-                                docker push $DOCKERHUB_USER/nginx-to-do-app:$TAG
-                                docker push $DOCKERHUB_USER/nginx-to-do-app:latest
+                                
+                                docker tag build-test-dev-environment-nginx-dev $DOCKERHUB_USER/nginx-to-do-app:$TAG-dev
+                                docker tag build-test-dev-environment-nginx-dev $DOCKERHUB_USER/nginx-to-do-app:latest-dev
+                                docker push $DOCKERHUB_USER/nginx-to-do-app:$TAG-dev
+                                docker push $DOCKERHUB_USER/nginx-to-do-app:latest-dev
                             '''
                         }
                     }
             }
         }
-        stage('triggerCDpipeline') {
+        stage('Deploy-to-Dev-Environment') {
             steps {
-                build job: 'deploy-registry', wait: true
+                sh 'docker compose -f compose-development.yml up -d'
             }
         }
     }

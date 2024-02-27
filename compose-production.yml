@@ -1,14 +1,14 @@
 services:
-  app:
-    container_name: app-container
+  app-prod:
+    container_name: app-container-production
     build:
       context: ./app
       dockerfile: Dockerfile
       target: release
     ports:
       - "3000:3000"
-  nginx:
-    container_name: nginx-container
+  nginx-prod:
+    container_name: nginx-container-production
     build: 
       context: ./nginx
       dockerfile: Dockerfile
@@ -16,4 +16,4 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - app
+      - app-prod

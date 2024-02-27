@@ -2,19 +2,38 @@
 pipeline {
     agent { label 'deploymentNode' }
     //agent any
+    environment {
+        TAG = "${env.BUILD_ID}"
+    }
     stages {
+        stage('Deploy-to-Production-Environment') {
+            steps {
+                sh 'docker compose -f compose-production.yml build -d'
+            }
+        }
         stage('Deploy') {
             steps {
-                sh '''
-                    NETWORK_NAME="to-do-app-network"; docker network inspect $NETWORK_NAME >/dev/null 2>&1 || docker network create $NETWORK_NAME
-                    if [ "$(docker ps -q)" != "" ]; then
-                        docker stop $(docker ps -q) && docker rm $(docker ps -a -q)
-                    fi   
-                    docker pull josanchezva/to-do-app:latest
-                    docker pull josanchezva/nginx-to-do-app:latest
-                    docker run -d -p 3000:3000 --name app-container --network to-do-app-network josanchezva/to-do-app:latest
-                    docker run -d -p 80:80 --name nginx-container --network to-do-app-network josanchezva/nginx-to-do-app:latest
-                '''
+                    script {
+                        withCredentials([usernamePassword(credentialsId: 'dockerhub-josanchezva-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+                            sh '''
+                                echo "$DOCKERHUB_PASS" | docker login -u $DOCKERHUB_USER --password-stdin
+                                docker tag deploy-pipeline-app-prod $DOCKERHUB_USER/to-do-app:$TAG-prod
+                                docker tag deploy-pipeline-app-prod $DOCKERHUB_USER/to-do-app:latest-prod
+                                docker push $DOCKERHUB_USER/to-do-app:$TAG-prod
+                                docker push $DOCKERHUB_USER/to-do-app:latest-prod
+
+                                docker tag deploy-pipeline-nginx-prod $DOCKERHUB_USER/nginx-to-do-app:$TAG-prod
+                                docker tag deploy-pipeline-nginx-prod $DOCKERHUB_USER/nginx-to-do-app:latest-prod
+                                docker push $DOCKERHUB_USER/nginx-to-do-app:$TAG-prod
+                                docker push $DOCKERHUB_USER/nginx-to-do-app:latest-prod
+                            '''
+                        }
+                    }
+            }
+        }
+        stage('Deploy-to-Prod-Environment') {
+            steps {
+                sh 'docker compose -f compose-production.yml up -d'
             }
         }
     }
