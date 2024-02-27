@@ -10,7 +10,7 @@ Vagrant.configure("2") do |config|
       vb.memory = "1024"
     end
     developmentVM.vm.provision "shell" do |shell|
-      shell.path = "slave-setup.sh"
+      shell.path = "provision-nodes.sh"
     end
   end
 
@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
       vb.memory = "1024"
     end
     deploymentVM.vm.provision "shell" do |shell|
-      shell.path = "slave-setup.sh"
+      shell.path = "provision-nodes.sh"
     end
   end
 
