@@ -1,18 +1,21 @@
-/* groovylint-disable LineLength */
 pipeline {
     agent { label 'deploymentNode' }
-    //agent any
     environment {
         TAG = "${env.BUILD_ID}"
     }
     stages {
-        stage('Deploy-to-Production-Environment') {
+        stage('Build') {
             steps {
                 sh 'docker compose -f compose-production.yml down'
                 sh 'docker compose -f compose-production.yml build'
             }
         }
-        stage('Deploy') {
+        stage('Test') {
+            steps {
+                sh 'docker run --rm deploy-in-production-app-prod yarn test'
+            }
+        }
+        stage('Deploy-Production') {
             steps {
                     script {
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-josanchezva-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
