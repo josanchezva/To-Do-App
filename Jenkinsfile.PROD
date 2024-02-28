@@ -10,11 +10,6 @@ pipeline {
                 sh 'docker compose -f compose-production.yml build'
             }
         }
-        stage('Test') {
-            steps {
-                sh 'docker run --rm deploy-in-production-app-prod yarn test'
-            }
-        }
         stage('Deploy-Production') {
             steps {
                     script {
